@@ -488,13 +488,13 @@ public class BookDAO extends DBConnect {
         return books;
     }
 
-    public boolean addAuthorsForBook(int bookId, List<Author> authorList) {
+   public boolean addAuthorsForBook(int bookId, List<Author> authorList) {
         String insertAuthorsQuery = "INSERT INTO BookAuthors (book_id, author_id) VALUES (?, ?)";
         boolean allAuthorsAdded = true;
 
         try (PreparedStatement statement = conn.prepareStatement(insertAuthorsQuery)) {
+            statement.setInt(1, bookId);
             for (Author author : authorList) {
-                statement.setInt(1, bookId);
                 statement.setInt(2, author.getAuthorId());
                 int rowsInserted = statement.executeUpdate();
                 if (rowsInserted <= 0) {
