@@ -16,7 +16,7 @@ public class DBConnect {
 
     public DBConnect(String url, String userName, String pass) {
         try {
-            conn = DriverManager.getConnection(url, userName, pass);
+            DriverManager.getConnection(url, userName, pass);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -32,8 +32,7 @@ public class DBConnect {
         try (Statement state = conn.createStatement(
                 ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_UPDATABLE
-            )) 
-        {
+        )) {
             rs = state.executeQuery(sql);
         } catch (SQLException ex) {
             ex.printStackTrace();

@@ -80,7 +80,7 @@ public class ProfileController extends HttpServlet {
 
         UserDAO userDao = new UserDAO();
 
-        User userr = userDao.validateUser(user.getUsername(), password);
+        userDao.validateUser(user.getUsername(), password);
 
         boolean updateSuccessful = userDao.updateUser(user.getUserId(), email, password, confirmPassword, fullName);
         if (updateSuccessful) {
