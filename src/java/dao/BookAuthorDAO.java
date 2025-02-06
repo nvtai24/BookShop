@@ -46,7 +46,7 @@ public class BookAuthorDAO extends DBConnect {
 
     public List<Author> getAllAuthor() {
         List<Author> authors = new ArrayList<>();
-        String query = "SELECT * FROM Authors";
+        String query = "SELECT author_id , image ,description,author_name  FROM Authors";
 
         try (PreparedStatement statement = conn.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
 
@@ -65,13 +65,6 @@ public class BookAuthorDAO extends DBConnect {
         return authors;
     }
 
-    public static void main(String[] args) {
-        BookAuthorDAO bDao = new BookAuthorDAO();
-        List<Author> allAuthors = bDao.getAllAuthor();
-        System.out.println("\nAll Authors:");
-        for (Author a : allAuthors) {
-            System.out.println(a.toString());
-        }
-    }
+
 
 }
