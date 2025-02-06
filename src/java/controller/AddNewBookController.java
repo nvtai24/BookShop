@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import model.Author;
-import model.Book;
 import model.Category;
 import model.User;
 public class AddNewBookController extends HttpServlet {
@@ -81,7 +80,7 @@ return;
             double price = Double.parseDouble(request.getParameter("price"));
             String description = request.getParameter("description");
             String image = request.getParameter("image");
-            int quantity_in_stock = Integer.parseInt(request.getParameter("quantity_in_stock"));
+            int quantityInStock = Integer.parseInt(request.getParameter("quantity_in_stock"));
             String[] authors = request.getParameterValues("authors[]");
 
             // Xử lý danh sách tác giả
@@ -96,11 +95,7 @@ return;
 
             // Lưu sách vào cơ sở dữ liệu
             BookDAO bookDao = new BookDAO();
-            boolean success = bookDao.addNewBook(categoryId, title, rating, price, description, image, quantity_in_stock);
-
-            Book booknew = bookDao.getNewestBook();
-            // lưu vào bookauthor
-            boolean addAuthor = bookDao.addAuthorsForBook(booknew.getBookId(), authorList);
+            boolean success = bookDao.addNewBook(categoryId, title, rating, price, description, image, quantityInStock);
 
             if (success) {
                 // Redirect về trang danh sách sách sau khi thêm thành công
