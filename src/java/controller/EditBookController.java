@@ -17,18 +17,15 @@ import model.Category;
 
 public class EditBookController extends HttpServlet {
 
-    // Assuming you have a service or DAO to handle business logic
-    // Example: BookService bookService = new BookService();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String bookId = request.getParameter("bookId");
         BookDAO bookDao = new BookDAO();
-        
-        Book book = bookDao.getBookById(Integer.parseInt(bookId));        
+
+        Book book = bookDao.getBookById(Integer.parseInt(bookId));
         request.setAttribute("book", book);
-        
+
         CategoryDAO categoryDao = new CategoryDAO();
         List<Category> listCategory = categoryDao.getAllCategories();
         request.setAttribute("listC", listCategory);
@@ -43,7 +40,7 @@ public class EditBookController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-          int bookId = Integer.parseInt(request.getParameter("bookId"));
+            int bookId = Integer.parseInt(request.getParameter("bookId"));
             String title = request.getParameter("title");
             int categoryId = Integer.parseInt(request.getParameter("categoryId"));
             int rating = Integer.parseInt(request.getParameter("rating"));
@@ -71,7 +68,7 @@ public class EditBookController extends HttpServlet {
             bookDao.deleteAuthorsForBook(bookId);
 
             // Thêm tác giả mới cho sách
-            boolean addAuthor = bookDao.addAuthorsForBook(bookId, authorList);
+            bookDao.addAuthorsForBook(bookId, authorList);
 
             if (success) {
                 // Redirect về trang danh sách sách sau khi chỉnh sửa thành công

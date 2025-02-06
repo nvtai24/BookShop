@@ -31,7 +31,6 @@ public class RegisterController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -53,10 +52,13 @@ public class RegisterController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    static final String REGISTER_PAGE = "register.jsp";
+    static final String ERROR_MESSAGE = "registerError";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("register.jsp").forward(request, response);
+        request.getRequestDispatcher(REGISTER_PAGE).forward(request, response);
     }
 
     /**
@@ -70,6 +72,9 @@ public class RegisterController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        String registerError = "";
+
         String username = request.getParameter("username");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -82,14 +87,14 @@ public class RegisterController extends HttpServlet {
                 || confirmPassword == null || confirmPassword.isEmpty()
                 || fullName == null || fullName.isEmpty()) {
 
-            request.setAttribute("registerError", "All fields are required.");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+            request.setAttribute(ERROR_MESSAGE, "All fields are required.");
+            request.getRequestDispatcher(REGISTER_PAGE).forward(request, response);
             return;
         }
 
         if (!password.equals(confirmPassword)) {
-            request.setAttribute("registerError", "Passwords do not match.");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+            request.setAttribute(ERROR_MESSAGE, "Passwords do not match.");
+            request.getRequestDispatcher(REGISTER_PAGE).forward(request, response);
             return;
         }
 
@@ -98,8 +103,8 @@ public class RegisterController extends HttpServlet {
         if (isCreated) {
             response.sendRedirect("login.jsp");
         } else {
-            request.setAttribute("registerError", "Registration failed. Username or email might already be taken.");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+            request.setAttribute(ERROR_MESSAGE, "Registration failed. Username or email might already be taken.");
+            request.getRequestDispatcher(REGISTER_PAGE).forward(request, response);
         }
     }
 
