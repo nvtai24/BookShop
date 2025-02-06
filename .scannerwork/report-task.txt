@@ -2,5 +2,5 @@ projectKey=mrt_afterfix
 serverUrl=http://localhost:9000
 serverVersion=25.2.0.102705
 dashboardUrl=http://localhost:9000/dashboard?id=mrt_afterfix
-ceTaskId=2e905fe4-2606-4faf-9d76-5764fee5cbdc
-ceTaskUrl=http://localhost:9000/api/ce/task?id=2e905fe4-2606-4faf-9d76-5764fee5cbdc
+ceTaskId=c0a4354f-d113-47d7-a771-03e292e7e30a
+ceTaskUrl=http://localhost:9000/api/ce/task?id=c0a4354f-d113-47d7-a771-03e292e7e30a

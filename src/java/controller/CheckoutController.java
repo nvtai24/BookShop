@@ -115,7 +115,7 @@ public class CheckoutController extends HttpServlet {
         // chuyển status sang trạng thái khác
         CartDAO cartDao = new CartDAO();
         String status = "checkout";
-        boolean isAddOrder = cartDao.updateOrder(orderId, totalAmount, status);
+        cartDao.updateOrder(orderId, totalAmount, status);
 
         request.setAttribute("mess", "Checkout successfully");
 
