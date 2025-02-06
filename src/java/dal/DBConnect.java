@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 public class DBConnect {
 
-    private static Connection conn = null;
+    private  Connection conn = null;
 
     public DBConnect(String url, String userName, String pass) {
         try {
