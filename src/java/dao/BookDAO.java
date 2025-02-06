@@ -488,7 +488,7 @@ public class BookDAO extends DBConnect {
         return books;
     }
 
-   public boolean addAuthorsForBook(int bookId, List<Author> authorList) {
+    public boolean addAuthorsForBook(int bookId, List<Author> authorList) {
         String insertAuthorsQuery = "INSERT INTO BookAuthors (book_id, author_id) VALUES (?, ?)";
         boolean allAuthorsAdded = true;
 
@@ -568,18 +568,18 @@ public class BookDAO extends DBConnect {
         return null;
     }
 
-    public boolean updateBook(int bookId, int categoryId, String title, int rating, double price, String description, String image, int quantity_in_stock) {
+    public boolean updateBook(Book book) {
         String query = "UPDATE Books SET category_id = ?, title = ?, rating = ?, price = ?, description = ?, image = ?, quantity_in_stock = ? WHERE book_id = ?";
 
         try (PreparedStatement statement = conn.prepareStatement(query)) {
-            statement.setInt(1, categoryId);
-            statement.setString(2, title);
-            statement.setInt(3, rating);
-            statement.setDouble(4, price);
-            statement.setString(5, description);
-            statement.setString(6, image);
-            statement.setInt(7, quantity_in_stock);
-            statement.setInt(8, bookId);
+            statement.setInt(1, book.getCategoryId().getCategoryId()); // Vì categoryId là một đối tượng Category
+            statement.setString(2, book.getTitle());
+            statement.setInt(3, book.getRating());
+            statement.setDouble(4, book.getPrice());
+            statement.setString(5, book.getDescription());
+            statement.setString(6, book.getImage());
+            statement.setInt(7, book.getQuantityInStock());
+            statement.setInt(8, book.getBookId());
 
             int rowsUpdated = statement.executeUpdate();
             return rowsUpdated > 0;
@@ -645,7 +645,7 @@ public class BookDAO extends DBConnect {
 
     public List<Book> getTop10SoldBooksByCategory(int categoryId) {
         List<Book> topSoldBooks = new ArrayList<>();
-            String query = "  SELECT TOP 10 * FROM Books WHERE category_id = ? ORDER BY [book_id] DESC"; // Standard SQL syntax
+        String query = "  SELECT TOP 10 * FROM Books WHERE category_id = ? ORDER BY [book_id] DESC"; // Standard SQL syntax
 
         try (PreparedStatement statement = conn.prepareStatement(query)) {
 
@@ -695,6 +695,5 @@ public class BookDAO extends DBConnect {
         }
 
     }
-
 
 }
