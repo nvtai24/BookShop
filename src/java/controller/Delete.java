@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
 public class Delete extends HttpServlet {
 
     /**
@@ -30,7 +29,6 @@ public class Delete extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -59,28 +57,28 @@ public class Delete extends HttpServlet {
         if (request.getParameter("delete").equals("deleteUser")) {
             int userId = Integer.parseInt(request.getParameter("userId"));
             UserDAO userDao = new UserDAO();
-            boolean isDelete = userDao.deleteUserData(userId);
+            userDao.deleteUserData(userId);
             response.sendRedirect("manager-user");
 
         }
         if (request.getParameter("delete").equals("deleteOrder")) {
             int orderId = Integer.parseInt(request.getParameter("orderId"));
             CartDAO cartDao = new CartDAO();
-            boolean isDelete = cartDao.deleteOrder(orderId);
+            cartDao.deleteOrder(orderId);
             response.sendRedirect("manager-order");
 
         }
         if (request.getParameter("delete").equals("deleteAuthor")) {
             int authorId = Integer.parseInt(request.getParameter("authorId"));
             UserDAO userDao = new UserDAO();
-            boolean isdelete = userDao.deleteAuthor(authorId);
+            userDao.deleteAuthor(authorId);
             response.sendRedirect("manager-author");
 
         }
         if (request.getParameter("delete").equals("deleteBook")) {
             int bookId = Integer.parseInt(request.getParameter("bookId"));
             BookDAO bookDao = new BookDAO();
-            boolean isdelete = bookDao.deleteBookById(bookId);
+            bookDao.deleteBookById(bookId);
             response.sendRedirect("manager-book");
 
         }

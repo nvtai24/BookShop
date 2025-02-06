@@ -13,34 +13,34 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class AddAndEditAuthorController extends HttpServlet {
 
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String action = request.getParameter("action");
-        if(action.equals("edit")){
-        int authorId = Integer.parseInt(request.getParameter("authorId"));
-        String authorName = request.getParameter("authorName");
-        String authorImage = request.getParameter("authorImage");
-        String authorDescription = request.getParameter("authorDescription");
+        if (action.equals("edit")) {
+            int authorId = Integer.parseInt(request.getParameter("authorId"));
+            String authorName = request.getParameter("authorName");
+            String authorImage = request.getParameter("authorImage");
+            String authorDescription = request.getParameter("authorDescription");
 
-        UserDAO authorDAO = new UserDAO();
+            UserDAO authorDAO = new UserDAO();
 
-        // Call DAO method to update author information
-        authorDAO.updateAuthor(authorId, authorName, authorImage, authorDescription);
-        response.sendRedirect("manager-author"); 
+            // Call DAO method to update author information
+            authorDAO.updateAuthor(authorId, authorName, authorImage, authorDescription);
+            response.sendRedirect("manager-author");
         }
-        if(action.equals("add")){
-                    // Get parameters from the request
-        String authorName = request.getParameter("authorName");
-        String authorImage = request.getParameter("authorImage");
-        String authorDescription = request.getParameter("authorDescription");
+        if (action.equals("add")) {
+            // Get parameters from the request
+            String authorName = request.getParameter("authorName");
+            String authorImage = request.getParameter("authorImage");
+            String authorDescription = request.getParameter("authorDescription");
 
-        UserDAO authorDAO = new UserDAO();
+            UserDAO authorDAO = new UserDAO();
 
-        authorDAO.addAuthor(authorName, authorImage, authorDescription);
-        response.sendRedirect("manager-author");
+            authorDAO.addAuthor(authorName, authorImage, authorDescription);
+            response.sendRedirect("manager-author");
 
         }
+    }
 }

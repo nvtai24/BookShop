@@ -16,7 +16,6 @@ import model.Author;
 import model.Book;
 import model.Category;
 
-
 public class BookAuthorDAO extends DBConnect {
 
     public List<Author> getAuthorsByBookId(int bookId) {
@@ -48,7 +47,8 @@ public class BookAuthorDAO extends DBConnect {
         List<Author> authors = new ArrayList<>();
         String query = "SELECT author_id , image ,description,author_name  FROM Authors";
 
-        try (PreparedStatement statement = conn.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
+        try (PreparedStatement statement = conn.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
                 Author author = new Author();
@@ -64,7 +64,5 @@ public class BookAuthorDAO extends DBConnect {
 
         return authors;
     }
-
-
 
 }
