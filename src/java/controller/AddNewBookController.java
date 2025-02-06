@@ -19,6 +19,7 @@ import java.util.List;
 import model.Author;
 import model.Category;
 import model.User;
+
 public class AddNewBookController extends HttpServlet {
 
     /**
@@ -50,13 +51,13 @@ public class AddNewBookController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-          HttpSession session = request.getSession();
-          User user =(User) session.getAttribute("username");
-          if(user.getRoleId().getRoleId() == 2){
-              request.setAttribute("mess", "không có quyền");             
-                      request.getRequestDispatcher("addNewBook.jsp").forward(request, response);
-return;
-          }
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("username");
+        if (user.getRoleId().getRoleId() == 2) {
+            request.setAttribute("mess", "không có quyền");
+            request.getRequestDispatcher("addNewBook.jsp").forward(request, response);
+            return;
+        }
 
         CategoryDAO categoryDao = new CategoryDAO();
         List<Category> listCategory = categoryDao.getAllCategories();

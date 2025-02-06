@@ -58,9 +58,8 @@ public class BanController extends HttpServlet {
 
         int userId = Integer.parseInt(request.getParameter("UserId"));
         UserDAO userDao = new UserDAO();
-        boolean isBan = userDao.banUserId(userId);
+        userDao.banUserId(userId);
         response.sendRedirect("manager-user");
-
     }
 
     /**
