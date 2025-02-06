@@ -159,16 +159,14 @@ public class CartDAO extends DBConnect {
                         updatePs.setDouble(2, price * (existingQuantity + quantity)); // Update the price for the new quantity
                         updatePs.setInt(3, orderId);
                         updatePs.setInt(4, bookId);
-                        
-                        
+
                         // tính quá giới hạn trong kho 
                         BookDAO bookDao = new BookDAO();
                         Book book = bookDao.getBookById(bookId);
-                        
-                        if(book.getQuantityInStock() < (existingQuantity +quantity)){
+
+                        if (book.getQuantityInStock() < (existingQuantity + quantity)) {
                             return false;
                         }
-                        
 
                         int rowsUpdated = updatePs.executeUpdate();
                         if (rowsUpdated > 0) {
@@ -246,16 +244,6 @@ public class CartDAO extends DBConnect {
             // Set the parameters for the query
             ps.setDouble(1, totalAmount);
             ps.setInt(2, orderId);
-
-            // Execute the update query
-            int rowsAffected = ps.executeUpdate();
-
-            if (rowsAffected > 0) {
-                System.out.println("Order total amount updated successfully.");
-                return true;
-            } else {
-                System.out.println("Failed to update order total amount.");
-            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -297,33 +285,32 @@ public class CartDAO extends DBConnect {
 
                 // Lấy thông tin số lượng hiện có và đã bán của sách
                 String sqlGetBook = "SELECT quantity_in_stock, quantity_sold FROM Books WHERE book_id = ?";
-                PreparedStatement stmtGetBook = conn.prepareStatement(sqlGetBook);
-                stmtGetBook.setInt(1, bookId);
-                ResultSet rsGetBook = stmtGetBook.executeQuery();
+                try (PreparedStatement stmtGetBook = conn.prepareStatement(sqlGetBook)) {
+                    stmtGetBook.setInt(1, bookId);
+                    try (ResultSet rsGetBook = stmtGetBook.executeQuery();) {
+                        if (rsGetBook.next()) {
+                            int quantityInStock = rsGetBook.getInt("quantity_in_stock");
+                            int quantitySold = rsGetBook.getInt("quantity_sold");
 
-                if (rsGetBook.next()) {
-                    int quantityInStock = rsGetBook.getInt("quantity_in_stock");
-                    int quantitySold = rsGetBook.getInt("quantity_sold");
+                            // Cập nhật lại số lượng sách
+                            int newQuantityInStock = quantityInStock - quantityOrdered;
+                            int newQuantitySold = quantitySold + quantityOrdered;
 
-                    // Cập nhật lại số lượng sách
-                    int newQuantityInStock = quantityInStock - quantityOrdered;
-                    int newQuantitySold = quantitySold + quantityOrdered;
+                            // SQL update
+                            String sqlUpdateBook = "UPDATE Books SET quantity_in_stock = ?, quantity_sold = ? WHERE book_id = ?";
+                            try (PreparedStatement stmtUpdateBook = conn.prepareStatement(sqlUpdateBook)) {
+                                stmtUpdateBook.setInt(1, newQuantityInStock);
+                                stmtUpdateBook.setInt(2, newQuantitySold);
+                                stmtUpdateBook.setInt(3, bookId);
 
-                    // SQL update
-                    String sqlUpdateBook = "UPDATE Books SET quantity_in_stock = ?, quantity_sold = ? WHERE book_id = ?";
-                    PreparedStatement stmtUpdateBook = conn.prepareStatement(sqlUpdateBook);
-                    stmtUpdateBook.setInt(1, newQuantityInStock);
-                    stmtUpdateBook.setInt(2, newQuantitySold);
-                    stmtUpdateBook.setInt(3, bookId);
-
-                    int rowsUpdated = stmtUpdateBook.executeUpdate();
-                    if (rowsUpdated <= 0) {
-                        return false; // Có lỗi khi cập nhật
+                                int rowsUpdated = stmtUpdateBook.executeUpdate();
+                                if (rowsUpdated <= 0) {
+                                    return false; // Có lỗi khi cập nhật
+                                }
+                            }
+                        }
                     }
                 }
-
-                rsGetBook.close();
-                stmtGetBook.close();
             }
 
             return true;
@@ -421,36 +408,31 @@ public class CartDAO extends DBConnect {
     }
 
     public boolean deleteOrder(int orderId) {
-        String deleteOrderDetailsQuery = "DELETE FROM OrderDetails WHERE order_id = ?";
-        String deleteOrderQuery = "DELETE FROM Orders WHERE order_id = ?";
+    String deleteOrderDetailsQuery = "DELETE FROM OrderDetails WHERE order_id = ?";
+    String deleteOrderQuery = "DELETE FROM Orders WHERE order_id = ?";
 
-        PreparedStatement deleteOrderDetailsStmt = null;
-        PreparedStatement deleteOrderStmt = null;
+    try (
+        PreparedStatement deleteOrderDetailsStmt = conn.prepareStatement(deleteOrderDetailsQuery);
+        PreparedStatement deleteOrderStmt = conn.prepareStatement(deleteOrderQuery)
+    ) {
+        deleteOrderDetailsStmt.setInt(1, orderId);
+        deleteOrderDetailsStmt.executeUpdate();
 
-        try {
+        // Xóa đơn hàng
+        deleteOrderStmt.setInt(1, orderId);
+        int affectedRows = deleteOrderStmt.executeUpdate();
 
-            deleteOrderDetailsStmt = conn.prepareStatement(deleteOrderDetailsQuery);
-            deleteOrderDetailsStmt.setInt(1, orderId);
-            deleteOrderDetailsStmt.executeUpdate();
-
-            // Xóa đơn hàng
-            deleteOrderStmt = conn.prepareStatement(deleteOrderQuery);
-            deleteOrderStmt.setInt(1, orderId);
-            int affectedRows = deleteOrderStmt.executeUpdate();
-
-            if (affectedRows == 1) {
-                conn.commit();
-                return true;
-            } else {
-                return false;
-            }
-        } catch (SQLException e) {
-
-            e.printStackTrace();
+        if (affectedRows == 1) {
+            conn.commit();
+            return true;
+        } else {
             return false;
         }
-
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
     }
+}
 
     public static void main(String[] args) {
         CartDAO cartDao = new CartDAO();
